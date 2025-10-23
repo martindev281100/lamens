@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: test-project
+  namespace: argocd
+  labels:
+    app: test-project
+    environment: development
+spec:
+  description: Test project for development
+  sourceRepos:
+    - https://github.com/example/test-repo.git
+    - "*"
+  destinations:
+    - namespace: test-app
+      server: https://kubernetes.default.svc
+    - namespace: "*"
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+    - group: apps
+      kind: Deployment
+  namespaceResourceBlacklist:
+    - group: ""
+      kind: Secret
+    - group: ""
+      kind: ConfigMap
+  syncWindows:
+    - kind: allow
+      schedule: "0 1 * * *"
+      duration: 1h
+      applications:
+        - "*"
+      manualSync: false
+  roles:
+    - name: test-role
+      description: Test role for the project
+      policies:
+        - p, proj:test-project:test-role, applications, *, test-project/*
+      groups:
+        - test-group
+      jwtTokens:
+        - iat: 1516239022

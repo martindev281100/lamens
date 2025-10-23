@@ -1,0 +1,15 @@
+apiVersion: v2
+name: test-chart
+description: A Helm chart for testing
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - test
+  - example
+home: https://github.com/example/test-chart
+sources:
+  - https://github.com/example/test-chart
+maintainers:
+  - name: Test Maintainer
+    email: test@example.com

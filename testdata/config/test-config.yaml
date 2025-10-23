@@ -1,0 +1,72 @@
+# Test configuration for kargo-bootstrap
+
+# Kubernetes configuration
+kubernetes:
+  kubeconfig: "/path/to/kubeconfig"
+  namespace: "default"
+  context: "test-context"
+
+# ArgoCD configuration
+argocd:
+  namespace: "argocd"
+  server: "argocd-server.argocd.svc.cluster.local"
+  insecure: true
+  auth:
+    username: "admin"
+    password: "password"
+
+# Git configuration
+git:
+  defaultBranch: "main"
+  auth:
+    type: "token"
+    token: "test-token"
+
+# Application configuration
+application:
+  name: "test-app"
+  description: "Test application"
+  project: "test-project"
+  source:
+    repoURL: "https://github.com/example/test-repo.git"
+    path: "charts/test-chart"
+    targetRevision: "main"
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: "test-app"
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - "CreateNamespace=true"
+
+# Environment configuration
+environments:
+  - name: "development"
+    namespace: "dev"
+    values: "values-dev.yaml"
+  - name: "staging"
+    namespace: "staging"
+    values: "values-staging.yaml"
+  - name: "production"
+    namespace: "prod"
+    values: "values-prod.yaml"
+
+# Helm configuration
+helm:
+  valueFiles:
+    - "values.yaml"
+  parameters:
+    - name: "replicaCount"
+      value: "2"
+  releaseName: "test-app-release"
+
+# Prompt configuration
+prompt:
+  showHelp: true
+  showDefaults: true
+  confirmDangerous: true
+  timeoutSeconds: 30
+  pageSize: 10
+  colorOutput: true

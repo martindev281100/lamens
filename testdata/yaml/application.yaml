@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: test-app
+  namespace: argocd
+  labels:
+    app: test-app
+    environment: development
+  annotations:
+    argocd.argoproj.io/sync-options: CreateNamespace=true
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/example/test-repo.git
+    path: charts/test-chart
+    targetRevision: main
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: replicaCount
+          value: "2"
+      releaseName: test-app-release
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: test-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
